@@ -27,6 +27,7 @@ from rst2pdf import createpdf
 from rst2pdf import pygments_code_block_directive, oddeven_directive
 from pygments.lexers import get_lexer_by_name, guess_lexer
 
+import docutils
 from docutils import writers
 from docutils import nodes
 from docutils import languages
@@ -56,6 +57,12 @@ from xml.sax.saxutils import unescape, escape
 
 from traceback import print_exc
 
+# fix get_language for docutils>=0.8
+if docutils.__version__ >= '0.8':
+    orig_func = get_language
+    def get_language(arg1):
+        return orig_func(arg1, None)
+    languages.get_language = get_language
 
 class PDFBuilder(Builder):
     name = 'pdf'

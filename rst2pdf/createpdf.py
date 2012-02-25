@@ -55,6 +55,7 @@ from urlparse import urljoin, urlparse, urlunparse
 from copy import copy, deepcopy
 from optparse import OptionParser
 import logging
+import docutils
 
 from docutils.languages import get_language
 import docutils.readers.doctree
@@ -96,6 +97,15 @@ import tenjin
 to_str=tenjin.helpers.generate_tostrfunc('utf-8')
 escape=tenjin.helpers.escape
 templateEngine=tenjin.Engine()
+
+
+# fix get_language for docutils>=0.8
+if docutils.__version__ >= '0.8':
+    orig_func = get_language
+    def get_language(arg1):
+        return orig_func(arg1, None)
+
+
 
 def renderTemplate(tname, **context):
   context['to_str']=to_str
